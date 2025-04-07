@@ -1,0 +1,1 @@
+"""UI components for the speech-to-text application."""

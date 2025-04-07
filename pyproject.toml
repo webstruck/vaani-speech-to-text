@@ -1,0 +1,19 @@
+[project]
+name = "vaani-speech-to-text"
+version = "0.1.0"
+description = "Vaani is an open-source, AI-powered speech-to-text desktop app. Vaani (वाणी) refers to \"speech\" or \"voice\" in Sanskrit."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "faster-whisper>=1.1.1",
+    "keyboard>=0.13.5",
+    "matplotlib>=3.10.1",
+    "noisereduce>=3.0.3",
+    "numpy>=2.2.4",
+    "pyaudio>=0.2.14",
+    "pyautogui>=0.9.54",
+    "pyperclip>=1.9.0",
+    "pyside6>=6.9.0",
+    "pywin32>=310",
+    "scipy>=1.15.2",
+]
