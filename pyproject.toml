@@ -4,6 +4,28 @@ version = "0.1.0"
 description = "Vaani is an open-source, AI-powered speech-to-text desktop app. Vaani (वाणी) refers to \"speech\" or \"voice\" in Sanskrit."
 readme = "README.md"
 requires-python = ">=3.10"
+license = "Apache-2.0"
+authors = [
+    { name = "Nilesh Raghuvanshi", email = "nilesh.raghuvanshi@gmail.com" },
+]
+classifiers = [ # Add classifiers for PyPI visibility
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Sound/Audio :: Speech",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Desktop Environment",
+    "Environment :: Win32 (MS Windows)", # Specific for Qt/GUI
+    "Framework :: Qt",
+]
+keywords = ["speech-to-text", "whisper", "ai", "transcription", "desktop", "qt", "pyside6", "offline", "privacy"] # Add relevant keywords
 dependencies = [
     "faster-whisper>=1.1.1",
     "keyboard>=0.13.5",
@@ -17,3 +39,17 @@ dependencies = [
     "pywin32>=310",
     "scipy>=1.15.2",
 ]
+
+license-files = ["LICENSE"]
+
+
+[project.urls]
+Homepage = "https://github.com/webstruck/vaani-speech-to-text"
+Repository = "https://github.com/webstruck/vaani-speech-to-text"
+
+[project.scripts]
+vaani = "speech_to_text.__main__:main"
+
+[build-system]
+requires = ["setuptools >= 77.0.0"]
+build-backend = "setuptools.build_meta"
