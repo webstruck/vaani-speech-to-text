@@ -1,6 +1,6 @@
 [project]
 name = "vaani-speech-to-text"
-version = "0.1.0"
+version = "0.1.1"
 description = "Vaani is an open-source, AI-powered speech-to-text desktop app. Vaani (वाणी) refers to \"speech\" or \"voice\" in Sanskrit."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -22,8 +22,7 @@ classifiers = [ # Add classifiers for PyPI visibility
     "Topic :: Multimedia :: Sound/Audio :: Speech",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Topic :: Desktop Environment",
-    "Environment :: Win32 (MS Windows)", # Specific for Qt/GUI
-    "Framework :: Qt",
+    "Environment :: Win32 (MS Windows)"
 ]
 keywords = ["speech-to-text", "whisper", "ai", "transcription", "desktop", "qt", "pyside6", "offline", "privacy"] # Add relevant keywords
 dependencies = [

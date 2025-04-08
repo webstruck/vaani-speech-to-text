@@ -57,27 +57,25 @@ Vaani has been primarily developed and tested on **Windows**. While the core com
     *   **macOS:** `portaudio` (via Homebrew: `brew install portaudio`).
 *   **(Optional) NVIDIA GPU & CUDA:** For GPU acceleration:
     *   A CUDA-compatible NVIDIA GPU.
-    *   NVIDIA CUDA Toolkit installed and configured correctly (Vaani attempts to find it via the path specified in Settings, falling back to PATH environment variable on Windows). `faster-whisper` requires specific CUDA versions - check their documentation.
+    *   NVIDIA CUDA Toolkit installed and configured correctly (Vaani attempts to find it via the path specified in Settings, falling back to PATH environment variable on Windows). `faster-whisper` requires specific CUDA versions - check their [documentation](https://github.com/SYSTRAN/faster-whisper?tab=readme-ov-file#gpu) for details.
 *   **(Linux/macOS) Root/Admin Privileges:** Required for the `keyboard` library to capture global hotkeys.
 
 ## 🚀 Installation
 
-*(Assuming package name on PyPI will be `vaani-speech-to-text`)*
+*Install from PyPI:*
 
 ```bash
 pip install vaani-speech-to-text
 ```
+or 
 
-*(If not on PyPI yet, provide alternative instructions, e.g., installing from GitHub)*
+*Install from GitHub:*
 
 ```bash
-# Example: Install directly from GitHub (replace with your repo URL)
-pip install git+https://github.com/your-username/vaani-speech-to-text.git
 
-# Or, clone and install locally
-git clone https://github.com/your-username/vaani-speech-to-text.git
+git clone https://github.com/webstruck/vaani-speech-to-text.git
 cd vaani-speech-to-text
-pip install .
+uv pip install -r pyproject.toml
 ```
 
 **Note:** The first time you run Vaani or select a new model size, the `faster-whisper` library will download the required model files (this requires an internet connection). Subsequent uses of that model will be fully offline.
@@ -87,7 +85,7 @@ pip install .
 Once installed, run the application from your terminal:
 
 ```bash
-vaani-speech-to-text
+vaani
 ```
 
 The application icon will appear in your system tray.
@@ -176,8 +174,7 @@ Please report bugs or suggest features using the GitHub Issues tab.
 
 ## 📄 License
 
-Distributed under the <!-- **Specify Your License Here, e.g., MIT** --> License. See `LICENSE` file for more information.
-<!-- **IMPORTANT**: Make sure you add a LICENSE file to your repository! -->
+Distributed under the **Apache-2.0** License. See `LICENSE` file for more information.
 
 ## 🙏 Acknowledgements
 
