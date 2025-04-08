@@ -1,20 +1,17 @@
-# Vaani - Private, Offline AI Speech-to-Text Desktop App 🎤
+# Vaani - Private, Offline, Universal AI Speech-to-Text Desktop App 🎤
 
-<!-- Add relevant badges here: License, PyPI Version, Build Status, etc. -->
-<!-- Example: -->
-<!-- [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) -->
-<!-- [![PyPI version](https://badge.fury.io/py/vaani-speech-to-text.svg)](https://badge.fury.io/py/vaani-speech-to-text) -->
-<!-- [![Privacy Focused](https://img.shields.io/badge/Privacy-Offline%20Processing-brightgreen)](https://github.com/your-username/vaani-speech-to-text#privacy--offline-operation) -->
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![PyPI version](https://badge.fury.io/py/vaani-speech-to-text.svg)](https://badge.fury.io/py/vaani-speech-to-text)
 
-**Vaani (वाणी)**, meaning "speech" or "voice" in Sanskrit, is an open-source, AI-powered desktop application that provides **private, offline, real-time speech-to-text transcription**. Your voice data is processed **entirely on your local machine**, ensuring your conversations and dictations remain confidential.
+**Vaani (वाणी)**, meaning "speech" or "voice" in Sanskrit, is an open-source, AI-powered desktop application that provides **private, offline, real-time speech-to-text transcription**. Use your voice to type into **any application** on your desktop – web browsers, text editors, email clients, chat apps, and more. Your voice data is processed **entirely on your local machine**, ensuring your conversations and dictations remain confidential.
 
-It leverages the efficiency of `faster-whisper` and the flexibility of the PySide6 (Qt) framework to create a seamless and secure dictation experience directly into any application on your desktop.
+Vaani leverages the efficiency of `faster-whisper` and the flexibility of the PySide6 (Qt) framework to create a seamless, secure, and universal dictation experience.
 
 <!-- It's HIGHLY recommended to add a screenshot or GIF demonstrating Vaani in action! -->
 <!-- ![Vaani Screenshot](docs/screenshot.png) -->
 
 ## ✨ Features
-
+*   **<a name="universal-input"></a>🌐 Universal Input:** Dictate directly into **virtually any application or text field** that accepts keyboard input on your desktop. Works seamlessly across browsers, documents, code editors, chat clients, etc.
 *   **🔒 Privacy First - Offline Processing:** All transcription happens locally on your computer. Your voice data is **never sent to the cloud**.
 *   **Real-time Transcription:** Speak and watch your words appear in almost any active application.
 *   **High-Quality AI Model:** Powered by `faster-whisper`, offering various model sizes (tiny to large) for a balance between speed and accuracy. Models are downloaded once and run locally.
