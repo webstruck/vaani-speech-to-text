@@ -2,8 +2,8 @@
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![PyPI version](https://badge.fury.io/py/vaani-speech-to-text.svg)](https://badge.fury.io/py/vaani-speech-to-text)
-![Static Badge](https://img.shields.io/badge/Vibe%20coded%20with%20-%20Claude%20-%20%23da6b47)
-![Static Badge](https://img.shields.io/badge/Vibe%20coded%20with%20-%20Gemini%20-%20%230057ce)
+![Static Badge](https://img.shields.io/badge/Vibe%20coded%20with%20-%20Claude%20-%20%23da6b47)(https://claude.ai)
+![Static Badge](https://img.shields.io/badge/Vibe%20coded%20with%20-%20Gemini%20-%20%230057ce)(https://gemini.google.com/)
 
 **Vaani (वाणी)**, meaning "speech" or "voice" in Sanskrit, is an open-source, AI-powered desktop application that provides **private, offline, real-time speech-to-text transcription**. Use your voice to type into **any application** on your desktop – web browsers, text editors, email clients, chat apps, and more. Your voice data is processed **entirely on your local machine**, ensuring your conversations and dictations remain confidential.
 
