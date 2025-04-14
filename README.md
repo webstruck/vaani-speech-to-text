@@ -153,10 +153,10 @@ Key dependencies include:
 ## 🗺️ Future Plans / Roadmap
 
 *   [ ] Create user-friendly installers for Windows (and potentially other platforms).
-*   [ ] Improve cross-platform compatibility (text insertion, hotkey alternatives).
-*   [ ] Explore alternative transcription backends or customization options (while maintaining offline capability).
-*   [ ] Add more post-processing text options.
 *   [ ] Language selection for transcription (requires corresponding Whisper models).
+*   [ ] Add more post-processing text options.
+*   [ ] Improve cross-platform compatibility (text insertion, hotkey alternatives).
+
 
 ## 🙌 Contributing
 

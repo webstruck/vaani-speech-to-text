@@ -367,7 +367,8 @@ class SpeechToTextApp(QObject):
 
 
                 if text and len(text.strip()) > 0:
-                    cleaned_text = self.text_processor.post_process_text(text)
+                    # cleaned_text = self.text_processor.post_process_text(text)
+                    cleaned_text = text.strip() # Simplified for now, can be improved later
 
                     is_continuous = (last_transcription_time is not None and
                                      current_time - last_transcription_time < self.settings.sentence_pause_threshold)

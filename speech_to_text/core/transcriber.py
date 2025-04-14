@@ -36,7 +36,7 @@ class Transcriber:
                 device=device,
                 compute_type=compute_type,
                 download_root=None,
-                local_files_only=False,
+                local_files_only=True,
                 num_workers=4
             )
             self.logger.info(f"Model loaded successfully on {device}")
@@ -64,7 +64,7 @@ class Transcriber:
             segments, info = self.stt_model.transcribe(
                 audio_data,
                 beam_size=5,
-                word_timestamps=True,
+                word_timestamps=False,
                 language="en",
                 vad_filter=True,
                 vad_parameters=dict(
