@@ -9,8 +9,8 @@
 
 Vaani leverages the efficiency of `faster-whisper` and the flexibility of the PySide6 (Qt) framework to create a seamless, secure, and universal dictation experience.
 
-<!-- It's HIGHLY recommended to add a screenshot or GIF demonstrating Vaani in action! -->
-<!-- ![Vaani Screenshot](docs/screenshot.png) -->
+## 📽️ Demo
+[![Watch the video](https://img.youtube.com/vi/RApsOgGdNs4/0.jpg)](https://www.youtube.com/watch?v=RApsOgGdNs4)
 
 ## ✨ Features
 *   **<a name="universal-input"></a>🌐 Universal Input:** Dictate directly into **virtually any application or text field** that accepts keyboard input on your desktop. Works seamlessly across browsers, documents, code editors, chat clients, etc.
