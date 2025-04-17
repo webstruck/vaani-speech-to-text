@@ -3,6 +3,18 @@ Settings data model for the speech-to-text application.
 """
 import typing as t
 
+# Add the supported language codes here
+_LANGUAGE_CODES = (
+    "af", "am", "ar", "as", "az", "ba", "be", "bg", "bn", "bo", "br", "bs", "ca",
+    "cs", "cy", "da", "de", "el", "en", "es", "et", "eu", "fa", "fi", "fo", "fr",
+    "gl", "gu", "ha", "haw", "he", "hi", "hr", "ht", "hu", "hy", "id", "is", "it",
+    "ja", "jw", "ka", "kk", "km", "kn", "ko", "la", "lb", "ln", "lo", "lt", "lv",
+    "mg", "mi", "mk", "ml", "mn", "mr", "ms", "mt", "my", "ne", "nl", "nn", "no",
+    "oc", "pa", "pl", "ps", "pt", "ro", "ru", "sa", "sd", "si", "sk", "sl", "sn",
+    "so", "sq", "sr", "su", "sv", "sw", "ta", "te", "tg", "th", "tk", "tl", "tr",
+    "tt", "uk", "ur", "uz", "vi", "yi", "yo", "zh", "yue",
+)
+
 class Settings:
     """Stores application settings."""
     
@@ -36,8 +48,10 @@ class Settings:
         
         # Model parameters
         self.model_size = "small"
-        self.device = "cuda"  # New setting for device selection
+        self.device = "cpu"  # New setting for device selection
         self.cuda_path = "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.8\\bin"  # New setting for CUDA path
+
+        self.language = "en" # <-- ADDED: Default language setting
         
         # Debug mode
         self.debug_mode = False
@@ -91,6 +105,7 @@ class Settings:
             self.model_size = settings_dict["processing"].get("model_size", self.model_size)
             self.device = settings_dict["processing"].get("device", self.device)
             self.cuda_path = settings_dict["processing"].get("cuda_path", self.cuda_path)
+            self.language = settings_dict["processing"].get("language", self.language)
         
         # Update UI settings
         if "ui" in settings_dict:
@@ -130,7 +145,8 @@ class Settings:
             "processing": {
                 "model_size": self.model_size,
                 "device": self.device,
-                "cuda_path": self.cuda_path
+                "cuda_path": self.cuda_path,
+                "language": self.language
 
             },
             "ui": {

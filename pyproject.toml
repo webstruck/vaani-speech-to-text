@@ -1,6 +1,6 @@
 [project]
 name = "vaani-speech-to-text"
-version = "0.1.1"
+version = "0.1.2"
 description = "Vaani is an open-source, AI-powered speech-to-text desktop app. Vaani (वाणी) refers to \"speech\" or \"voice\" in Sanskrit."
 readme = "README.md"
 requires-python = ">=3.10"

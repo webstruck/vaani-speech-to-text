@@ -15,7 +15,7 @@ import os
 import sys
 # Assuming audio_utils.get_audio_input_devices remains the same
 from speech_to_text.utils.audio_utils import get_audio_input_devices
-from speech_to_text.models.settings import Settings # Import the Settings class
+from speech_to_text.models.settings import Settings, _LANGUAGE_CODES # Import the Settings class
 from speech_to_text.ui.speech_indicator import SpeechIndicator # To call reset_position
 
 class SettingsDialog(QDialog):
@@ -216,6 +216,16 @@ class SettingsDialog(QDialog):
         tab = QWidget()
         layout = QVBoxLayout(tab)
 
+        # --- Language ---
+        lang_layout = QHBoxLayout()
+        lang_label = QLabel("Language:")
+        self.language_combo = QComboBox()
+        self.language_combo.addItems(_LANGUAGE_CODES) # Populate from imported list
+        self.language_combo.setToolTip("Select the language to be transcribed.")
+        lang_layout.addWidget(lang_label)
+        lang_layout.addWidget(self.language_combo, stretch=1)
+        layout.addLayout(lang_layout)
+
         # --- Model Size ---
         model_layout = QHBoxLayout()
         model_label = QLabel("Model Size:")
@@ -224,7 +234,7 @@ class SettingsDialog(QDialog):
         model_restart = QLabel("(Restart Required)")
         model_restart.setStyleSheet("font-style: italic; color: gray;")
         model_layout.addWidget(model_label)
-        model_layout.addWidget(self.model_size_combo)
+        model_layout.addWidget(self.model_size_combo, stretch=1)
         model_layout.addWidget(model_restart)
         layout.addLayout(model_layout)
 
@@ -236,7 +246,7 @@ class SettingsDialog(QDialog):
         device_restart = QLabel("(Restart Required)")
         device_restart.setStyleSheet("font-style: italic; color: gray;")
         device_layout.addWidget(device_label)
-        device_layout.addWidget(self.device_combo)
+        device_layout.addWidget(self.device_combo, stretch=1)
         device_layout.addWidget(device_restart)
         layout.addLayout(device_layout)
         self.device_combo.currentTextChanged.connect(self._update_cuda_path_state) # Enable/disable path
@@ -256,6 +266,7 @@ class SettingsDialog(QDialog):
 
         # --- Explanation ---
         explanation_text = (
+            "<b>Language</b> determines the language expected in the audio.<br><br>"
             "<b>Model size</b> affects accuracy and speed:<br>"
             "• tiny: Fastest, lowest accuracy<br>"
             "• base: Fast, basic accuracy<br>"
@@ -317,6 +328,7 @@ class SettingsDialog(QDialog):
 
         # Processing
         self.model_size_combo.setCurrentText(s.model_size)
+        self.language_combo.setCurrentText(s.language)
         self.device_combo.setCurrentText(s.device)
         self.cuda_path_entry.setText(s.cuda_path if s.cuda_path else "")
         self._update_cuda_path_state(s.device) # Set initial enable/disable
@@ -346,6 +358,7 @@ class SettingsDialog(QDialog):
 
         # Processing
         s.model_size = self.model_size_combo.currentText()
+        s.language = self.language_combo.currentText()
         s.device = self.device_combo.currentText()
         s.cuda_path = self.cuda_path_entry.text().strip()
 

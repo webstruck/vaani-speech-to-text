@@ -6,6 +6,7 @@ Handles loading and using the speech recognition model.
 import logging
 import os
 import numpy as np
+from speech_to_text.models.settings import Settings
 
 class Transcriber:
     """Handles speech transcription using the Whisper model."""
@@ -44,6 +45,14 @@ class Transcriber:
         except Exception as e:
             self.logger.error(f"Failed to load model: {str(e)}")
             return False
+        
+    def update_settings(self, settings: Settings):
+        """Update the settings used by the transcriber."""
+        # NOTE: This currently only updates the settings reference.
+        # If future settings required more complex updates (like model params
+        # that can be changed dynamically), this method would handle it.
+        self.logger.info(f"Transcriber updating settings (New language: {settings.language})")
+        self.settings = settings
     
     def transcribe(self, audio_data: np.ndarray) -> str:
         """
@@ -60,12 +69,13 @@ class Transcriber:
             return ""
         
         try:
+            transcription_language = self.settings.language
             # Perform transcription
             segments, info = self.stt_model.transcribe(
                 audio_data,
                 beam_size=5,
                 word_timestamps=False,
-                language="en",
+                language=transcription_language,
                 vad_filter=True,
                 vad_parameters=dict(
                     min_silence_duration_ms=500,
@@ -75,6 +85,11 @@ class Transcriber:
             
             # Combine segments into text
             text = " ".join(segment.text for segment in segments)
+            # Log detected language info
+            self.logger.info(f"Detected language: '{info.language}' with probability {info.language_probability:.2f}")
+            # Optional: check if detected language matches selected one
+            if info.language != transcription_language:
+                self.logger.warning(f"Detected language '{info.language}' differs from selected language '{transcription_language}'. Results might be suboptimal.")
             return text
             
         except Exception as e:

@@ -137,7 +137,7 @@ class SpeechToTextApp(QObject):
 
         # Create System Tray Icon (QSystemTrayIcon)
         self.system_tray = SystemTrayIcon(
-            "Speech to Text",
+            "Vaani - Speech to Text",
             self._on_toggle_listening_triggered, # Use internal slots/methods
             self._on_test_microphone_triggered,
             self._on_show_settings_triggered,
@@ -435,18 +435,8 @@ class SpeechToTextApp(QObject):
         if not text: 
             return
         self.logger.info(f"Queueing text insertion: {text[:30]}...")
-        # Text insertion might involve focus changes or delays, run in main thread
-        # using QTimer.singleShot to avoid blocking the queue processor thread.
-        # QTimer.singleShot(0, lambda t=text: self._execute_insert_text(t))
-        # def schedule_insertion():
-        #     self.logger.debug(f"Timer lambda executing for text: '{text[:30]}...'") # Add log here
-        #     self._execute_insert_text(text)
-
-        # self.logger.info(f"insert_text scheduling QTimer for: '{text[:30]}...'")
-        # QTimer.singleShot(0, schedule_insertion) # Use a named function
-        # schedule_insertion() # Directly call for simplicity in this context
-        
-
+        # Use QMetaObject to invoke the method in the main GUI thread
+        # This is necessary to ensure thread safety when interacting with the UI
         QMetaObject.invokeMethod(
             self,                       # target object (self)
             "_execute_insert_text",     # method name (slot)
@@ -496,6 +486,7 @@ class SpeechToTextApp(QObject):
                 # Update components with new settings
                 self.speech_detector.update_settings(self.settings)
                 self.audio_processor.update_settings(self.settings)
+                self.transcriber.update_settings(self.settings) 
                 if self.speech_indicator:
                     self.speech_indicator.update_settings(self.settings) # Update indicator settings if needed
 

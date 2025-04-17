@@ -5,7 +5,7 @@ Configuration management for the speech-to-text application.
 import os
 import json
 import logging
-from speech_to_text.models.settings import Settings
+from speech_to_text.models.settings import Settings, _LANGUAGE_CODES
 import typing as t
 
 class ConfigManager:
@@ -66,7 +66,10 @@ class ConfigManager:
                                             ["tiny", "base", "small", "medium", "large"], 
                                             "small")
         settings.device = self.validate_option(settings.device, ["cpu", "cuda"], "cpu")
-        
+
+        # <-- ADDED Language Validation -->
+        settings.language = self.validate_option(settings.language, _LANGUAGE_CODES, "en")
+          
         return settings
 
     # Helper validation functions to add at module level
