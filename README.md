@@ -167,9 +167,8 @@ Key dependencies include:
 ## 🗺️ Future Plans / Roadmap
 
 *   [ ] Create user-friendly installers for Windows (and potentially other platforms).
-*   [ ] Language selection for transcription (requires corresponding Whisper models).
-*   [ ] Add more post-processing text options.
-*   [ ] Improve cross-platform compatibility (text insertion, hotkey alternatives).
+*   [x] Language selection for transcription.
+*   [x] Add more post-processing text options.
 
 
 ## 🙌 Contributing
