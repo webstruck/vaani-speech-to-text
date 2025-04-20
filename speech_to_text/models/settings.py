@@ -51,7 +51,7 @@ class Settings:
         self.device = "cpu"  # New setting for device selection
         self.cuda_path = "C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v12.8\\bin"  # New setting for CUDA path
 
-        self.language = "en" # <-- ADDED: Default language setting
+        self.language = "en" # Default language setting
         
         # Debug mode
         self.debug_mode = False
@@ -63,6 +63,12 @@ class Settings:
         self.calibration_energy = None
         self.calibration_timestamp = 0
         self.last_calibrated_device = None
+        
+        # LLM text processing settings
+        self.use_llm_processing = False  # Enable/disable LLM text processing
+        self.llm_model_name = "gemma3:1b-it-qat"  # Default LLM model to use
+        self.llm_endpoint = "http://localhost:11434"  # Ollama endpoint
+        self.llm_timeout = 3.0  # Timeout in seconds for LLM processing
     
     def update(self, settings_dict):
         """Update settings from a dictionary."""
@@ -106,6 +112,10 @@ class Settings:
             self.device = settings_dict["processing"].get("device", self.device)
             self.cuda_path = settings_dict["processing"].get("cuda_path", self.cuda_path)
             self.language = settings_dict["processing"].get("language", self.language)
+            self.use_llm_processing = settings_dict["processing"].get("use_llm_processing", self.use_llm_processing)
+            self.llm_model_name = settings_dict["processing"].get("llm_model_name", self.llm_model_name)
+            self.llm_endpoint = settings_dict["processing"].get("llm_endpoint", self.llm_endpoint)
+            self.llm_timeout = settings_dict["processing"].get("llm_timeout", self.llm_timeout)
         
         # Update UI settings
         if "ui" in settings_dict:
@@ -146,8 +156,11 @@ class Settings:
                 "model_size": self.model_size,
                 "device": self.device,
                 "cuda_path": self.cuda_path,
-                "language": self.language
-
+                "language": self.language,
+                "use_llm_processing": self.use_llm_processing,
+                "llm_model_name": self.llm_model_name,
+                "llm_endpoint": self.llm_endpoint,
+                "llm_timeout": self.llm_timeout
             },
             "ui": {
                 "visual_feedback": self.visual_feedback,

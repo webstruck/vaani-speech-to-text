@@ -99,6 +99,20 @@ The application icon will appear in your system tray.
 
 Right-click the system tray icon for menu options (Start/Stop, Settings, Test Mic, Exit).
 
+## Updates
+
+### LLM-Based Text Processing
+
+The latest update introduces LLM-based text processing capabilities using Ollama:
+
+- **Enhanced Transcription Quality**: Uses local language models to improve grammar, spelling, and overall text quality of transcriptions
+- **Easy Integration**: Works with locally-running Ollama models like Mistral, Llama, etc. Works best with Gemma 3 Quantization aware trained models (QAT) gemma3:1b-it-qat which is just 1 GB.
+- **Fault-Tolerant Design**: Falls back to basic text processing if LLM is not available or times out
+
+To use this feature:
+1. Install [Ollama](https://ollama.ai/) on your system
+2. Run a model of your choice (e.g., `ollama run gemma3:1b-it-qat`)
+
 ## ⚙️ Configuration
 
 Settings are stored in a `settings.json` file located in:

@@ -32,6 +32,7 @@ from speech_to_text.ui.test_mic_dialog import TestMicDialog
 from speech_to_text.utils.config_manager import ConfigManager
 from speech_to_text.utils.logging_setup import setup_logging
 from speech_to_text.utils.text_processing import TextProcessor
+from speech_to_text.utils.llm_text_processing import LLMTextProcessor
 from speech_to_text.utils.error_handling import log_exceptions, safe_execution
 from speech_to_text.utils.text_inserter import TextInserter
 
@@ -67,8 +68,13 @@ class SpeechToTextApp(QObject):
         self.is_processing_queue = False
         self.pending_text = []
 
-        # Initialize core components
-        self.text_processor = TextProcessor()
+        # Initialize text processors
+        self.basic_text_processor = TextProcessor()
+        self.llm_text_processor = None
+        
+        # Initialize the appropriate text processor based on settings
+        self._init_text_processor()
+        
         self.transcriber = Transcriber(self.settings)
         self.audio_processor = AudioProcessor(self.settings, self.config_manager)
         self.speech_detector = SpeechDetector(
@@ -95,6 +101,36 @@ class SpeechToTextApp(QObject):
         # self.diag_timer.timeout.connect(lambda: self.logger.info("--- Diagnostic Timer Tick ---"))
         # self.diag_timer.start(2000) # Log every 2 seconds
         # self.logger.info("Diagnostic timer started.")
+
+    def _init_text_processor(self):
+        """Initialize the appropriate text processor based on settings."""
+        self.basic_text_processor = TextProcessor()
+        
+        if self.settings.use_llm_processing:
+            try:
+                self.logger.info(f"Initializing LLM text processor with model: {self.settings.llm_model_name}")
+                self.llm_text_processor = LLMTextProcessor(
+                    model_name=self.settings.llm_model_name,
+                    endpoint=self.settings.llm_endpoint,
+                    fallback_processor=self.basic_text_processor
+                )
+                
+                # Check if Ollama is running and the model is available
+                if not self.llm_text_processor._test_ollama_connection():
+                    self.logger.warning("Could not connect to Ollama. Falling back to basic text processor.")
+                    self.settings.use_llm_processing = False
+                elif not self.llm_text_processor.is_model_available():
+                    self.logger.warning(f"Model {self.settings.llm_model_name} not available in Ollama. Falling back to basic text processor.")
+                    self.settings.use_llm_processing = False
+                else:
+                    self.logger.info("LLM text processor initialized successfully.")
+            except Exception as e:
+                self.logger.error(f"Failed to initialize LLM text processor: {str(e)}")
+                self.settings.use_llm_processing = False
+                self.llm_text_processor = None
+        else:
+            self.logger.info("Using basic text processor (LLM processing disabled).")
+            self.llm_text_processor = None
 
     @log_exceptions
     def run(self):
@@ -367,8 +403,13 @@ class SpeechToTextApp(QObject):
 
 
                 if text and len(text.strip()) > 0:
-                    # cleaned_text = self.text_processor.post_process_text(text)
-                    cleaned_text = text.strip() # Simplified for now, can be improved later
+                    # Apply text processing using either LLM or basic processor
+                    if self.settings.use_llm_processing and self.llm_text_processor:
+                        cleaned_text = self.llm_text_processor.post_process_text(text)
+                        self.logger.debug(f"LLM processed text: '{text}' -> '{cleaned_text}'")
+                    else:
+                        cleaned_text = self.basic_text_processor.post_process_text(text)
+                        self.logger.debug(f"Basic processed text: '{text}' -> '{cleaned_text}'")
 
                     is_continuous = (last_transcription_time is not None and
                                      current_time - last_transcription_time < self.settings.sentence_pause_threshold)

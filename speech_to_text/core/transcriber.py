@@ -37,7 +37,7 @@ class Transcriber:
                 device=device,
                 compute_type=compute_type,
                 download_root=None,
-                local_files_only=True,
+                local_files_only=False,
                 num_workers=4
             )
             self.logger.info(f"Model loaded successfully on {device}")

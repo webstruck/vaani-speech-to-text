@@ -4,15 +4,14 @@ Settings dialog for the speech-to-text application (PySide6 version).
 
 import logging
 import typing as t
+import requests
 from PySide6.QtWidgets import (QDialog, QWidget, QTabWidget, QVBoxLayout,
                                QHBoxLayout, QGridLayout, QLabel, QLineEdit,
                                QComboBox, QSlider, QCheckBox, QPushButton,
                                QFileDialog, QMessageBox, QDialogButtonBox,
                                QSizePolicy, QScrollArea)
 from PySide6.QtCore import Qt, Slot, Signal
-from PySide6.QtGui import QIntValidator # For input validation if needed
 import os
-import sys
 # Assuming audio_utils.get_audio_input_devices remains the same
 from speech_to_text.utils.audio_utils import get_audio_input_devices
 from speech_to_text.models.settings import Settings, _LANGUAGE_CODES # Import the Settings class
@@ -63,6 +62,7 @@ class SettingsDialog(QDialog):
         self._create_hotkeys_tab()
         self._create_audio_tab()
         self._create_processing_tab()
+        self._create_llm_tab()  # New tab for LLM processing
         self._create_ui_tab()
 
         # Dialog buttons (OK, Cancel, Apply, Reset)
@@ -282,9 +282,79 @@ class SettingsDialog(QDialog):
         layout.addWidget(explanation_label)
 
         layout.addStretch(1)
-        self.notebook.addTab(tab, "Processing")
+        self.notebook.addTab(tab, "Transcribe")
         self._update_cuda_path_state(self.device_combo.currentText()) # Initial state
 
+    def _create_llm_tab(self):
+        """Create the LLM text processing settings tab."""
+        tab = QWidget()
+        layout = QVBoxLayout(tab)
+
+        # --- Enable LLM Processing ---
+        self.use_llm_processing_check = QCheckBox("Enable LLM text processing")
+        self.use_llm_processing_check.setToolTip("Use LLM to improve transcription quality with context-aware processing")
+        layout.addWidget(self.use_llm_processing_check)
+        
+        # Connect to enable/disable the other controls
+        self.use_llm_processing_check.toggled.connect(self._update_llm_controls_state)
+        
+        layout.addSpacing(10)
+        
+        # --- LLM Settings Group ---
+        llm_group = QWidget()
+        llm_layout = QVBoxLayout(llm_group)
+        llm_layout.setContentsMargins(0, 0, 0, 0)
+
+        # --- Ollama Endpoint ---
+        endpoint_layout = QHBoxLayout()
+        endpoint_label = QLabel("Ollama Endpoint:")
+        self.llm_endpoint_entry = QLineEdit()
+        self.llm_endpoint_entry.setPlaceholderText("http://localhost:11434")
+        endpoint_layout.addWidget(endpoint_label)
+        endpoint_layout.addWidget(self.llm_endpoint_entry, stretch=1)
+        llm_layout.addLayout(endpoint_layout)
+        
+        # --- Model Dropdown with fetch button ---
+        model_layout = QHBoxLayout()
+        model_label = QLabel("LLM Model:")
+        self.llm_model_combo = QComboBox()
+        self.llm_model_combo.setSizeAdjustPolicy(QComboBox.SizeAdjustPolicy.AdjustToContents)
+        self.llm_model_combo.setEditable(True)
+        self.refresh_models_button = QPushButton("Refresh Models")
+        self.refresh_models_button.clicked.connect(self._fetch_ollama_models)
+        model_layout.addWidget(model_label)
+        model_layout.addWidget(self.llm_model_combo, stretch=1)
+        model_layout.addWidget(self.refresh_models_button)
+        llm_layout.addLayout(model_layout)
+        
+        # --- Timeout slider ---
+        self.timeout_widget, self.timeout_slider = self._create_slider_widget(
+            "Timeout (seconds):", 1.0, 10.0, self.editable_settings.llm_timeout, 0.5)
+        llm_layout.addWidget(self.timeout_widget)
+        
+        layout.addWidget(llm_group)
+        
+        # --- Explanation ---
+        layout.addSpacing(15)
+        explanation_text = (
+            "<b>LLM Text Processing</b> uses large language models to improve transcript quality.<br><br>"
+            "• <b>Ollama Endpoint</b>: URL where Ollama server is running<br>"
+            "• <b>LLM Model</b>: Model to use for text processing (fetched from Ollama)<br>"
+            "• <b>Timeout</b>: Maximum time to wait for LLM responses (lower for real-time use)<br><br>"
+            "Requires <a href='https://ollama.ai'>Ollama</a> to be installed and running locally. "
+            "Processing happens locally using your computer's hardware."
+        )
+        explanation_label = QLabel(explanation_text)
+        explanation_label.setWordWrap(True)
+        explanation_label.setOpenExternalLinks(True)
+        layout.addWidget(explanation_label)
+
+        layout.addStretch(1)
+        self.notebook.addTab(tab, "Post Processing")
+        
+        # Initial fetch of Ollama models if endpoint is set
+        if self.editable_settings.llm_endpoint:
+            self._fetch_ollama_models()
 
     def _create_ui_tab(self):
         tab = QWidget()
@@ -333,6 +403,13 @@ class SettingsDialog(QDialog):
         self.cuda_path_entry.setText(s.cuda_path if s.cuda_path else "")
         self._update_cuda_path_state(s.device) # Set initial enable/disable
 
+        # LLM Processing
+        self.use_llm_processing_check.setChecked(s.use_llm_processing)
+        self.llm_endpoint_entry.setText(s.llm_endpoint)
+        self.llm_model_combo.setCurrentText(s.llm_model_name)
+        self.timeout_slider.setValue(int(s.llm_timeout / 0.5))
+        self._update_llm_controls_state(s.use_llm_processing)
+
         # UI
         self.visual_feedback_check.setChecked(s.visual_feedback)
 
@@ -361,6 +438,12 @@ class SettingsDialog(QDialog):
         s.language = self.language_combo.currentText()
         s.device = self.device_combo.currentText()
         s.cuda_path = self.cuda_path_entry.text().strip()
+        
+        # LLM Processing
+        s.use_llm_processing = self.use_llm_processing_check.isChecked()
+        s.llm_model_name = self.llm_model_combo.currentText()
+        s.llm_endpoint = self.llm_endpoint_entry.text().strip()
+        s.llm_timeout = self.timeout_slider.value() * 0.5
 
         # UI
         s.visual_feedback = self.visual_feedback_check.isChecked()
@@ -484,6 +567,69 @@ class SettingsDialog(QDialog):
                  self._check_restart_needed() # Update main dialog's flag/title if needed
         else:
              self.logger.info("Advanced audio settings cancelled.")
+
+    @Slot(bool)
+    def _update_llm_controls_state(self, enabled: bool):
+        """Enable/disable LLM settings controls based on checkbox state."""
+        # Find the LLM settings group widget
+        llm_group = self.use_llm_processing_check.parent().findChildren(QWidget)[1]
+        llm_group.setEnabled(enabled)
+
+    @Slot()
+    def _fetch_ollama_models(self):
+        """Fetch available models from Ollama API."""
+        endpoint = self.llm_endpoint_entry.text().strip()
+        if not endpoint:
+            endpoint = "http://localhost:11434"  # Default endpoint
+            self.llm_endpoint_entry.setText(endpoint)
+            
+        try:
+            # Store current selection to restore it later
+            current_model = self.llm_model_combo.currentText()
+            
+            # Clear current items
+            self.llm_model_combo.clear()
+            
+            # Request models from Ollama API
+            url = f"{endpoint}/api/tags"
+            self.logger.info(f"Fetching models from Ollama API at {url}")
+            
+            response = requests.get(url, timeout=5)
+            if response.status_code == 200:
+                data = response.json()
+                models = [model["name"] for model in data.get("models", [])]
+                
+                # Add models to combo box
+                if models:
+                    self.llm_model_combo.addItems(models)
+                    # Restore previous selection if it exists in the new list
+                    index = self.llm_model_combo.findText(current_model)
+                    if index >= 0:
+                        self.llm_model_combo.setCurrentIndex(index)
+                    # QMessageBox.information(self, "Models Found", f"Found {len(models)} models from Ollama.")
+                else:
+                    # Don't add default models, just inform the user to install them
+                    QMessageBox.warning(self, "No Models Found", 
+                                     "No models found on Ollama server.\n\n"
+                                     "Please install models in Ollama first. The recommended model\n"
+                                     "is 'gemma3:1b-it-qat' which offers a good balance of speed and quality.\n\n"
+                                     "To install: 'ollama pull gemma3:1b-it-qat'")
+            else:
+                # Don't add default models on connection error
+                QMessageBox.warning(self, "Connection Error",
+                                 f"Failed to connect to Ollama API at {endpoint}.\n"
+                                 f"Error code: {response.status_code}\n\n"
+                                 "Please ensure Ollama is running and the endpoint is correct.\n"
+                                 "The recommended model is 'gemma3:1b-it-qat' once Ollama is running.")
+                
+        except requests.RequestException as e:
+            # Don't add default models on exception
+            self.logger.error(f"Failed to fetch models from Ollama: {e}")
+            QMessageBox.warning(self, "Connection Error", 
+                             f"Failed to connect to Ollama API at {endpoint}.\n"
+                             f"Error: {str(e)}\n\n"
+                             "Please ensure Ollama is running and the endpoint is correct.\n"
+                             "The recommended model is 'gemma3:1b-it-qat' once Ollama is running.")
 
 
 class AdvancedAudioSettingsDialog(QDialog):
