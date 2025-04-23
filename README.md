@@ -15,7 +15,7 @@ Vaani leverages the efficiency of `faster-whisper` and the flexibility of the Py
 ## ✨ Features
 *   **<a name="universal-input"></a>🌐 Universal Input:** Dictate directly into **virtually any application or text field** that accepts keyboard input on your desktop. Works seamlessly across browsers, documents, code editors, chat clients, etc.
 *   **🔒 Privacy First - Offline Processing:** All transcription happens locally on your computer. Your voice data is **never sent to the cloud**.
-*   **Real-time Transcription:** Speak and watch your words appear in almost any active application.
+*   **Real-time Transcription:** Speak and watch your words appear in almost any active application. Now, also supports optional correction using local LLMs powered by [Ollama](https://ollama.ai/).
 *   **High-Quality AI Model:** Powered by `faster-whisper`, offering various model sizes (tiny to large) for a balance between speed and accuracy. Models are downloaded once and run locally.
 *   **GPU Acceleration:** Supports CUDA (NVIDIA GPUs) for significantly faster *local* transcription (CPU fallback available).
 *   **System Tray Control:** Runs conveniently in the system tray for easy access.
