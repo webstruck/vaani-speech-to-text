@@ -2,6 +2,7 @@
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![PyPI version](https://badge.fury.io/py/vaani-speech-to-text.svg)](https://badge.fury.io/py/vaani-speech-to-text)
+[![PyPI Downloads](https://static.pepy.tech/badge/vaani-speech-to-text)](https://pepy.tech/projects/vaani-speech-to-text)
 [![Static Badge](https://img.shields.io/badge/Vibe%20coded%20with%20-%20Claude%20-%20%23da6b47)](https://claude.ai)
 [![Static Badge](https://img.shields.io/badge/Vibe%20coded%20with%20-%20Gemini%20-%20%230057ce)](https://gemini.google.com/)
 
